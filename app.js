@@ -35,6 +35,13 @@ const swaggerDocument = {
         responses: { '201': { description: 'Créé' } }
       }
     },
+    '/api/accounts/{id}': {
+  get: {
+    summary: 'Détails d un compte',
+    parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+    responses: { '200': { description: 'OK' }, '404': { description: 'Non trouvé' } }
+  }
+},
     '/api/accounts/{id}/deposit': {
       post: {
         summary: 'Faire un dépôt',
@@ -83,6 +90,11 @@ app.post('/api/accounts', (req, res) => {
   };
   accounts.push(newAccount);
   res.status(201).json(newAccount);
+});
+app.get('/api/accounts/:id', (req, res) => {
+    const account = accounts.find(a => a.id === req.params.id);
+    if (!account) return res.status(404).json({ error: "Compte non trouvé" });
+    res.json(account);
 });
 
 // Faire un dépôt
